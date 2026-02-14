@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+  <!-- Cute fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Pacifico&display=swap" rel="stylesheet">
+
+  <title>Valentine 💌</title>
+
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:Poppins,sans-serif;}
+    body{
+      height:100vh;
+      overflow:hidden;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      background:linear-gradient(-45deg,#933a03,#a5104e,#e44f4f,#ee697f);
+      background-size:400% 400%;
+      animation:bgMove 8s infinite alternate;
+    }
+    @keyframes bgMove{0%{background-position:0% 50%}100%{background-position:100% 50%}}
+    .heart{
+      position:absolute;
+      color:rgba(255,255,255,0.7);
+      animation:float 6s linear infinite;
+      font-size:20px;
+      pointer-events:none;
+    }
+    @keyframes float{0%{transform:translateY(100vh);opacity:0}100%{transform:translateY(-10vh);opacity:1}}
+    .card{
+      background:rgba(255,255,255,0.2);
+      backdrop-filter:blur(15px);
+      padding:40px 50px;
+      border-radius:25px;
+      text-align:center;
+      box-shadow:0 10px 40px rgba(0,0,0,.15);
+      color:white;
+      z-index:10;
+    }
+    h1{font-family:"Dancing Script",cursive;font-size:40px;margin-bottom:20px;}
+    .msg{min-height:25px;margin-bottom:20px;color:#ffe066;font-size:15px;}
+    .btns{position:relative;height:120px;}
+    button{padding:12px 30px;border:none;border-radius:25px;cursor:pointer;font-size:16px;transition:.3s;}
+    button:hover{transform:scale(1.1);}
+    #yes{position:absolute;background:#ff4d6d;color:white;font-family:"Pacifico",cursive;}
+    #no{background:white;color:#ff4d6d;font-weight:bold;}
+    .final{font-family:"Dancing Script",cursive;font-size:50px;color:white;text-align:center;animation:pop .5s ease;}
+    @keyframes pop{from{transform:scale(.5);opacity:0}to{transform:scale(1);opacity:1}}
+  </style>
+</head>
+<body>
+
+<div class="card">
+  <h1>Will you be my Valentine? 💖</h1>
+  <p class="msg" id="msg"></p>
+  <div class="btns">
+    <button id="yes">Yes</button>
+    <button id="no">No</button>
+  </div>
+</div>
+
+<script>
+  const yesBtn = document.getElementById("yes");
+  const noBtn = document.getElementById("no");
+  const msg = document.getElementById("msg");
+
+  /* ❤️ Floating Hearts */
+  setInterval(()=>{
+    const heart = document.createElement("div");
+    heart.innerText="❤";
+    heart.classList.add("heart");
+    heart.style.left=Math.random()*100+"vw";
+    heart.style.fontSize=Math.random()*15+15+"px";
+    document.body.appendChild(heart);
+    setTimeout(()=>heart.remove(),6000);
+  },400);
+
+  /* ✨ Typing intro */
+  const text="Hey... I have something special to ask you 💌";
+  let i=0;
+  function type(){
+    if(i<text.length){
+      msg.innerText+=text[i];
+      i++;
+      setTimeout(type,40);
+    }
+  }
+  type();
+
+  /* 😈 YES runs away */
+  const lines=["Too fast 😳","Catch me first 😂","Think again 😝","Not so easy 💨"];
+  let blockClick = false; // mobile click block
+
+  function moveYesButton() {
+    const x = Math.random() * (window.innerWidth - yesBtn.offsetWidth);
+    const y = Math.random() * (window.innerHeight - yesBtn.offsetHeight);
+    yesBtn.style.transform = `translate(${x}px, ${y}px)`;
+    msg.innerText = lines[Math.floor(Math.random() * lines.length)];
+  }
+
+  // Desktop hover
+  yesBtn.addEventListener("mouseover", moveYesButton);
+
+  // Mobile touch
+  yesBtn.addEventListener("touchstart", (e) => {
+    e.preventDefault(); 
+    blockClick = true; // block click temporarily
+    moveYesButton();
+    setTimeout(()=>{ blockClick = false; }, 300); // unblock after 300ms
+  });
+
+  // YES click
+  yesBtn.addEventListener("click", (e)=>{
+    if(blockClick) return; // ignore accidental mobile clicks
+    document.body.innerHTML='<div class="final">Yayyy 💕 You said YES!</div>';
+  });
+
+  /* 🥺 NO becomes smaller */
+  let size=1;
+  noBtn.addEventListener("click",()=>{
+    size-=0.2;
+    noBtn.style.transform=`scale(${size})`;
+    noBtn.innerText="Are you sure? 🥺";
+    if(size<=0.4){
+      noBtn.style.display="none";
+      msg.innerText="Only Yes left now 😏💖";
+    }
+  });
+</script>
+</body>
+</html>
